@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+
+<?php
+
+require_once 'loader.php';
+
+use PhpGpio\Gpio;
+use src\services\Logger;
+
+try {
+	$pinNumber    = (int) $argv[1];
+	$pinDirection = (string) $argv[2];
+	$pinState     = (int) ( isset( $argv[3] ) ? $argv[3] : 1 );
+
+	$gpio = new GPIO();
+
+	if ( $gpio->isValidPin( $pinNumber ) && $gpio->isValidDirection( $pinDirection ) ) {
+		if ( $pinDirection === 'out' ) {
+			$gpio->setup( $pinNumber, $pinDirection );
+			$gpio->output( $pinNumber, $pinState );
+
+			Logger::plain( 'out', '[OUT] ' . $pinNumber . ' pin set to ' . $pinState, true );
+		} else {
+			$pinState = (int) $gpio->input( $pinNumber );
+
+			Logger::plain( 'in', '[IN] ' . $pinNumber . ' pin state is ' . $pinState, true );
+
+			echo $pinState;
+		}
+	} else {
+		throw new Exception( 'An error occurred. Pin no. `' . $pinNumber . '` is not valid or `' . $pinDirection . '` is not valid direction!' );
+	}
+} catch ( Exception $ex ) {
+	Logger::error( 'error', $ex->getMessage(), true );
+}
+

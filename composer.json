@@ -1,0 +1,13 @@
+{
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "autoload": {
+        "psr-4": { "" : "" }
+    },
+    "require": {
+	"vlucas/phpdotenv": "^2.5",
+        "ronanguilloux/php-gpio": "^1.0"
+    }
+}
+
